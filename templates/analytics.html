@@ -24,7 +24,9 @@ table .detail {
 {% endblock %}
 
 {% block breadcrumbs %}
-<li class="active">Analytics</li>
+<ul>
+	<li class="active">Analytics</li>
+</ul>
 {% endblock %}
 
 {% block body %}
@@ -45,7 +47,7 @@ table .detail {
 		</thead>
 		<tbody>
 			<tr style="font-weight: bold; background-color: #F7F7F7;">
-				<td><i>overall</i></td>
+				<td><em>overall</em></td>
 				<td>{{table.overall}}</td>
 				<td>{{table.n}}</td>
 			</tr>

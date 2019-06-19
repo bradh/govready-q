@@ -31,8 +31,10 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<li class="active"><a href="/store">Compliance Apps</a></li>
-<li class="active">{{app.title|truncatewords:6}}</li>
+<ul>
+  <li class="active"><a href="/store">Compliance Apps</a></li>
+  <li class="active">{{app.title|truncatewords:6}}</li>
+</ul>
 {% endblock %}
 
 {% block body %}
@@ -51,7 +53,7 @@
   <div class="col-sm-3 col-sm-pull-9">
     <div style="padding-right: 1em">
       {% if app.app_icon_dataurl %}
-        <img src="{{app.app_icon_dataurl}}" style="width: 100%;">
+        <img src="{{app.app_icon_dataurl}}" alt="Data URL" style="width: 100%;">
       {% endif %}
 
       <form method="post" style="margin: 1em; text-align: center;">
