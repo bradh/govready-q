@@ -3,7 +3,7 @@ from random import sample, randint
 
 from django.utils.crypto import get_random_string
 from siteapp.models import User, Organization
-from guidedmodules.models import Task, TaskAnswer, Module, Project
+from guidedmodules.models import Task, TaskAnswer, Module, Project, ProjectMembership
 
 def get_file_dir():
     return os.path.dirname(os.path.realpath(__file__))
@@ -60,9 +60,16 @@ def create_organization(name=None, admin=None, help_squad=[], reviewers=[]):
         file.write(str(org.id))
         file.write("\n")
 
+    org_project = org.get_organization_project()
+    def user_joins_org(user):
+        if not ProjectMembership.objects.filter(user=user, project=org_project).exists():
+            ProjectMembership.objects.create(user=user, project=org_project)
+
     for user in help_squad:
+        user_joins_org(user)
         org.help_squad.add(user)
     for user in reviewers:
+        user_joins_org(user)
         org.reviewers.add(user)
     return org 
 
