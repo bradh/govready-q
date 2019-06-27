@@ -1170,11 +1170,10 @@ def send_invitation(request):
 
         # Validate that the user is a member of from_project. Is None
         # if user is not a project member.
-
-        if request.POST["portfolio"]:
+        if request.POST.get("portfolio"):
           from_portfolio = Portfolio.objects.filter(id=request.POST["portfolio"]).first() # TODO add permissions here
           from_project = None
-        elif request.POST["project"]:
+        elif request.POST.get("project"):
           from_project = Project.objects.filter(id=request.POST["project"], members__user=request.user).first()
           from_portfolio = None
 
@@ -1217,9 +1216,7 @@ def send_invitation(request):
             }
         elif request.POST.get("portfolio"):
             target = from_portfolio
-            target_info = {
-                "what": "editor",
-            }
+            target_info = {}
         else:
             target = from_project
             target_info = {

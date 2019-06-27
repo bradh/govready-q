@@ -371,7 +371,7 @@ class Portfolio(models.Model):
             assign_perm(perm.codename, user, portfolio)
 
     def get_invitation_verb_inf(self, invitation):
-        return ""
+        return "to view"
 
 class Folder(models.Model):
     """A folder is a collection of Projects."""
@@ -981,6 +981,9 @@ class Invitation(models.Model):
 
     def is_target_the_project(self):
         return isinstance(self.target, Project)
+
+    def is_target_the_portfolio(self):
+        return isinstance(self.target, Portfolio)
 
     def purpose(self):
         return self.purpose_verb() + " " + self.target.title
