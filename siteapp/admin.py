@@ -2,7 +2,7 @@ from django.contrib import admin
 
 import django.contrib.auth.admin as contribauthadmin
 
-from .models import User, Organization, Folder, Project, ProjectMembership
+from .models import User, Organization, Folder, Project, ProjectMembership, Portfolio
 
 def all_user_fields_still_exist(fieldlist):
     for f in fieldlist:
@@ -118,4 +118,5 @@ admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Folder, FolderAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(ProjectMembership, ProjectMembershipAdmin)
+admin.site.register(Portfolio)
 

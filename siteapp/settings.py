@@ -64,6 +64,7 @@ SITE_ID = 1
 
 # Add standard apps to INSTALLED_APPS.
 INSTALLED_APPS = [
+	'django_extensions',
 	'django.contrib.admin',
 	'django.contrib.auth',
 	'django.contrib.contenttypes',
@@ -143,6 +144,7 @@ LOGIN_REDIRECT_URL = "/"
 AUTHENTICATION_BACKENDS = [
 	'django.contrib.auth.backends.ModelBackend',
 	'allauth.account.auth_backends.AuthenticationBackend', # allauth
+	'guardian.backends.ObjectPermissionBackend',
 	]
 ACCOUNT_ADAPTER = primary_app + '.good_settings_helpers.AllauthAccountAdapter'
 ACCOUNT_AUTHENTICATION_METHOD = 'username'

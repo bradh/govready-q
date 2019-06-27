@@ -6,6 +6,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import RegexValidator
+from guardian.shortcuts import get_objects_for_user, assign_perm, get_perms_for_model
 
 from jsonfield import JSONField
 
@@ -345,6 +346,32 @@ class Organization(models.Model):
         pm.save()
 
         return org
+
+
+class Portfolio(models.Model):
+    title = models.CharField(max_length=256, help_text="The title of this Portfolio.")
+    description = models.CharField(max_length=512, blank=True, help_text="A description of this Portfolio.")
+    projects = models.ManyToManyField("Project", blank=True, related_name="in_folders", help_text="The Projects that are listed within this Portfolio.")
+
+    class Meta:
+        permissions = (
+            ('view_portfolio', 'View portfolio'),
+            ('can_grant_portfolio_permission', 'Grant a user portfolio permission'),
+            ('can_grant_portfolio_owner_permission', 'Grant a user portfolio owner permission'),
+        )
+
+    @staticmethod
+    def get_all_readable_by(user):
+        return get_objects_for_user(user, 'siteapp.view_portfolio')
+
+    @staticmethod
+    def assign_owner_permissions(user, portfolio):
+        permissions = get_perms_for_model(Portfolio)
+        for perm in permissions:
+            assign_perm(perm.codename, user, portfolio)
+
+    def get_invitation_verb_inf(self, invitation):
+        return ""
 
 class Folder(models.Model):
     """A folder is a collection of Projects."""
@@ -850,6 +877,10 @@ class Project(models.Model):
         return urllib.parse.urljoin(settings.SITE_ROOT_URL,
             "/api/v1//projects/{id}/answers".format(id=self.id))
 
+    @staticmethod
+    def get_all_readable_by(user):
+        return get_objects_for_user(user, 'siteapp.view_project')
+
 class ProjectMembership(models.Model):
     project = models.ForeignKey(Project, related_name="members", on_delete=models.CASCADE, help_text="The Project this is defining membership for.")
     user = models.ForeignKey(User, on_delete=models.CASCADE, help_text="The user that is a member of the Project.")
@@ -863,8 +894,9 @@ class ProjectMembership(models.Model):
 class Invitation(models.Model):
     # who is sending the invitation
     from_user = models.ForeignKey(User, related_name="invitations_sent", on_delete=models.CASCADE, help_text="The User who sent the invitation.")
-    from_project = models.ForeignKey(Project, related_name="invitations_sent", on_delete=models.CASCADE, help_text="The Project within which the invitation exists.")
-    
+    from_project = models.ForeignKey(Project, related_name="invitations_sent", on_delete=models.CASCADE, help_text="The Project within which the invitation exists.", blank=True, null=True)
+    from_portfolio = models.ForeignKey(Portfolio, related_name="portfolio_invitations_sent", on_delete=models.CASCADE, help_text="The Portfolio within which the invitation exists.", blank=True, null=True)
+
     # what is the recipient being invited to?
     into_project = models.BooleanField(default=False, help_text="Whether the user being invited is being invited to join from_project.")
     target_content_type = models.ForeignKey(ContentType, on_delete=models.PROTECT)
@@ -919,6 +951,16 @@ class Invitation(models.Model):
                 for pm in ProjectMembership.objects.filter(project=project)\
                     .exclude(user__in=exclude_users)],
             "can_add_invitee_to_team": project.can_invite_others(user),
+        }
+
+    @staticmethod
+    def portfolio_form_context_dict(user, portfolio, exclude_users):
+        from guidedmodules.models import ProjectMembership
+        return {
+            "portfolio_id": portfolio.id,
+            "portfolio_title": portfolio.title,
+            "users": [{ "id": user.id, "name": str(user)} ], # TODO add permissions user can view portfolio
+            "can_add_invitee_to_team": True, # TODO add permissions can_grant_portfolio_permission
         }
 
     @staticmethod

@@ -8,8 +8,10 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.utils import timezone
 from django.db import transaction
+from django.forms import ModelForm
 
-from .models import User, Folder, Project, Invitation
+from .models import User, Folder, Project, Invitation, Portfolio
+
 from guidedmodules.models import Module, ModuleQuestion, Task, ProjectMembership
 from discussion.models import Discussion
 
@@ -1101,6 +1103,51 @@ def project_upgrade_app(request, project):
         "app": app,
     })
 
+# PORTFOLIOS
+
+def portfolio_read_required(f):
+  pass
+
+@login_required
+def portfolio_list(request):
+    """List portfolios"""
+    return render(request, "portfolios/index.html", {
+        "portfolios": Portfolio.get_all_readable_by(request.user) if request.user.is_authenticated else None,
+    })
+
+@login_required
+def new_portfolio(request):
+    """Form to create new portfolios"""
+
+    class PortfolioForm(ModelForm):
+
+      class Meta:
+        model = Portfolio
+        fields = ['title', 'description', 'projects']
+
+    if request.method == 'POST':
+      form = PortfolioForm(request.POST)
+      if form.is_valid():
+        form.save()
+        portfolio = form.instance
+        Portfolio.assign_owner_permissions(request.user, portfolio)
+        return HttpResponseRedirect('/portfolios')
+    else:
+        form = PortfolioForm()
+
+    return render(request, 'portfolios/form.html', {'form': form})
+
+@login_required
+def portfolio_projects(request, pk):
+  """List of projects within a portfolio"""
+  portfolio = Portfolio.objects.get(pk=pk)
+  projects = portfolio.projects.all()
+  return render(request, "portfolios/detail.html", {
+      "portfolio": portfolio,
+      "projects": projects,
+      "can_invite_to_portfolio": True,
+      "send_invitation": Invitation.portfolio_form_context_dict(request.user, portfolio, [request.user]),
+      })
 
 # INVITATIONS
 
@@ -1123,7 +1170,13 @@ def send_invitation(request):
 
         # Validate that the user is a member of from_project. Is None
         # if user is not a project member.
-        from_project = Project.objects.filter(id=request.POST["project"], members__user=request.user).first()
+
+        if request.POST["portfolio"]:
+          from_portfolio = Portfolio.objects.filter(id=request.POST["portfolio"]).first() # TODO add permissions here
+          from_project = None
+        elif request.POST["project"]:
+          from_project = Project.objects.filter(id=request.POST["project"], members__user=request.user).first()
+          from_portfolio = None
 
         # Authorization for adding invitee to the project team.
         if not from_project:
@@ -1162,7 +1215,11 @@ def send_invitation(request):
             target_info = {
                 "what": "invite-guest",
             }
-
+        elif request.POST.get("portfolio"):
+            target = from_portfolio
+            target_info = {
+                "what": "editor",
+            }
         else:
             target = from_project
             target_info = {
@@ -1173,6 +1230,7 @@ def send_invitation(request):
             # who is sending the invitation?
             from_user=request.user,
             from_project=from_project,
+            from_portfolio=from_portfolio,
 
             # what is the recipient being invited to? validate that the user is an admin of this project
             # or an editor of the task being reassigned.
