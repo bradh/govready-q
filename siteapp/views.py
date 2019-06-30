@@ -1168,11 +1168,16 @@ def send_invitation(request):
             # dns.resolver.NoNameservers will result in EmailUndeliverableError.
             email_validator.validate_email(request.POST['user_email'], check_deliverability=settings.VALIDATE_EMAIL_DELIVERABILITY)
 
+        # Get the recipient user
+        to_user = User.objects.get(id=request.POST["user_id"]) if request.POST.get("user_id") else None,
+
+        # Find the Portfolio and grant permissions to the user being invited
+        if request.POST.get("portfolio"):
+          from_portfolio = Portfolio.objects.filter(id=request.POST["portfolio"]).first()
+          Portfolio.assign_editor_permissions(to_user, from_portfolio)
+          from_project = None
         # Validate that the user is a member of from_project. Is None
         # if user is not a project member.
-        if request.POST.get("portfolio"):
-          from_portfolio = Portfolio.objects.filter(id=request.POST["portfolio"]).first() # TODO add permissions here
-          from_project = None
         elif request.POST.get("project"):
           from_project = Project.objects.filter(id=request.POST["project"], members__user=request.user).first()
           from_portfolio = None
@@ -1236,7 +1241,7 @@ def send_invitation(request):
             target_info=target_info,
 
             # who is the recipient of the invitation?
-            to_user=User.objects.get(id=request.POST["user_id"]) if request.POST.get("user_id") else None,
+            to_user=to_user,
             to_email=request.POST.get("user_email"),
 
             # personalization

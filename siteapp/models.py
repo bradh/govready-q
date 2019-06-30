@@ -370,6 +370,12 @@ class Portfolio(models.Model):
         for perm in permissions:
             assign_perm(perm.codename, user, portfolio)
 
+    @staticmethod
+    def assign_editor_permissions(user, portfolio):
+        permissions = ['view_portfolio', 'change_portfolio', 'add_portfolio']
+        for perm in permissions:
+            assign_perm(perm, user, portfolio)
+
     def get_invitation_verb_inf(self, invitation):
         return "to view"
 
