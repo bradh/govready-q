@@ -376,6 +376,10 @@ class Portfolio(models.Model):
         for perm in permissions:
             assign_perm(perm, user, portfolio)
 
+    @staticmethod
+    def assign_viewer_permissions(user, portfolio):
+        assign_perm('view_portfolio', user, portfolio)
+
     def get_invitation_verb_inf(self, invitation):
         return "to view"
 

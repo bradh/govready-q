@@ -10,6 +10,9 @@ from django.utils import timezone
 from django.db import transaction
 from django.forms import ModelForm
 
+from guardian.decorators import permission_required_or_403
+from guardian.shortcuts import get_perms
+
 from .models import User, Folder, Project, Invitation, Portfolio
 
 from guidedmodules.models import Module, ModuleQuestion, Task, ProjectMembership
@@ -1113,9 +1116,11 @@ def portfolio_list(request):
     """List portfolios"""
     return render(request, "portfolios/index.html", {
         "portfolios": Portfolio.get_all_readable_by(request.user) if request.user.is_authenticated else None,
+        "portfolio_perms": get_perms(request.user, Portfolio),
     })
 
 @login_required
+@permission_required_or_403('siteapp.create_portfolio')
 def new_portfolio(request):
     """Form to create new portfolios"""
 
@@ -1138,6 +1143,7 @@ def new_portfolio(request):
     return render(request, 'portfolios/form.html', {'form': form})
 
 @login_required
+@permission_required_or_403('siteapp.view_portfolio')
 def portfolio_projects(request, pk):
   """List of projects within a portfolio"""
   portfolio = Portfolio.objects.get(pk=pk)
