@@ -1,4 +1,5 @@
 from django.contrib import admin
+from guardian.admin import GuardedModelAdmin
 
 import django.contrib.auth.admin as contribauthadmin
 
@@ -102,7 +103,7 @@ class FolderAdmin(admin.ModelAdmin):
     raw_id_fields = ('organization','admin_users')
     readonly_fields = ('projects', 'extra')
 
-class ProjectAdmin(admin.ModelAdmin):
+class ProjectAdmin(GuardedModelAdmin):
     list_display = ('id', 'organization', 'title', 'root_task', 'created')
     raw_id_fields = ('organization', 'root_task')
     readonly_fields = ('id', 'extra',)
@@ -113,10 +114,13 @@ class ProjectMembershipAdmin(admin.ModelAdmin):
     def organization(self, obj):
         return obj.project.organization
 
+class PortfolioAdmin(GuardedModelAdmin):
+    list_display = ('title', 'description')
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Folder, FolderAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(ProjectMembership, ProjectMembershipAdmin)
-admin.site.register(Portfolio)
+admin.site.register(Portfolio, PortfolioAdmin)
 
