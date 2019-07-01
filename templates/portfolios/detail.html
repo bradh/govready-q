@@ -55,6 +55,10 @@ Remove contextbar from top of page
 <p>This portfolio has {{ projects|length }} project{{ projects|pluralize }}</p>
 {% endif %}
 
+<p> <b>Users with access to this portfolio:</b>
+  <span> {{ users_with_perms|join:", " }} </span>
+</p>
+
 <div class="container">
 {% for project in projects %}
 <div class="row" style="border-top: 1px solid #aaa;padding: 8px 0px 8px 0px;">

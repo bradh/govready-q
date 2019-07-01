@@ -1153,6 +1153,7 @@ def portfolio_projects(request, pk):
       "projects": projects,
       "can_invite_to_portfolio": True,
       "send_invitation": Invitation.portfolio_form_context_dict(request.user, portfolio, [request.user]),
+      "users_with_perms": portfolio.formatted_users_with_perms()
       })
 
 # INVITATIONS

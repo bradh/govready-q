@@ -6,7 +6,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import RegexValidator
-from guardian.shortcuts import get_objects_for_user, assign_perm, get_perms_for_model
+from guardian.shortcuts import get_objects_for_user, assign_perm, get_perms_for_model, get_users_with_perms
 
 from jsonfield import JSONField
 
@@ -382,6 +382,16 @@ class Portfolio(models.Model):
 
     def get_invitation_verb_inf(self, invitation):
         return "to view"
+
+    def formatted_users_with_perms(self):
+        users_with_perms = get_users_with_perms(self, attach_perms=True)
+        formatted_users = []
+        for user in users_with_perms:
+            owner = '(owner)' if user.has_perm('can_grant_portfolio_owner_permission') else ''
+            name = user.name() if user.name() else user
+            display_name = '{name} {owner}'.format(name=name, owner=owner)
+            formatted_users.append(display_name)
+        return formatted_users
 
 class Folder(models.Model):
     """A folder is a collection of Projects."""
