@@ -301,6 +301,9 @@ def apps_catalog(request):
     forward_qsargs = { }
     if "q" in request.GET: forward_qsargs["q"] = request.GET["q"]
 
+    # Add the portfolio id the user is creating the project from to the args
+    if "portfolio" in request.GET: forward_qsargs["portfolio"] = request.GET["portfolio"]
+
     # Get the app catalog. If the user is answering a question, then filter to
     # just the apps that can answer that question.
     catalog, filter_description = filter_app_catalog(get_compliance_apps_catalog_for_user(request.user), request)
@@ -387,13 +390,19 @@ def apps_catalog_item(request, source_slug, app_name):
             if not app_satifies_interface(app_catalog_info, q):
                 raise ValueError("Invalid protocol.")
 
+        # Get portfolio project should be included in.
+        if request.GET.get("portfolio"):
+          portfolio = Portfolio.objects.get(id=request.GET.get("portfolio"))
+        else:
+          portfolio = None
+
         # Start the most recent version of the app.
         appver = app_catalog_info["versions"][0]
 
         # Start the app.
         from guidedmodules.app_loading import ModuleDefinitionError
         try:
-            project = start_app(appver, organization, request.user, folder, task, q)
+            project = start_app(appver, organization, request.user, folder, task, q, portfolio)
         except ModuleDefinitionError as e:
             error = str(e)
         else:
@@ -412,7 +421,7 @@ def apps_catalog_item(request, source_slug, app_name):
     })
 
 
-def start_app(appver, organization, user, folder, task, q):
+def start_app(appver, organization, user, folder, task, q, portfolio):
     from guidedmodules.app_loading import load_app_into_database
 
     # Begin a transaction to create the Module and Task instances for the app.
@@ -426,6 +435,10 @@ def start_app(appver, organization, user, folder, task, q):
         project.set_root_task(appver.modules.get(module_name="app"), user)
         if folder:
             folder.projects.add(project)
+
+        # Add to portfolio 
+        if portfolio:
+            portfolio.projects.add(project)
 
         # Add user as the first admin.
         ProjectMembership.objects.create(
