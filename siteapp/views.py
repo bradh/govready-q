@@ -1205,6 +1205,7 @@ def send_invitation(request):
         # Find the Portfolio and grant permissions to the user being invited
         if request.POST.get("portfolio"):
           from_portfolio = Portfolio.objects.filter(id=request.POST["portfolio"]).first()
+          to_user = get_object_or_404(User, id=request.POST.get("user_id"))
           from_portfolio.assign_editor_permissions(to_user)
           from_project = None
         # Validate that the user is a member of from_project. Is None
@@ -1272,7 +1273,7 @@ def send_invitation(request):
             target_info=target_info,
 
             # who is the recipient of the invitation?
-            to_user=to_user,
+            to_user=User.objects.get(id=request.POST["user_id"]) if request.POST.get("user_id") else None,
             to_email=request.POST.get("user_email"),
 
             # personalization
