@@ -29,6 +29,10 @@ Welcome to GovReady Q - {{org.name}}
   font-size: 13px;
 }
 
+.inline {
+  display: inline;
+}
+
 </style>
 {% endblock %}
 
@@ -106,30 +110,30 @@ Remove contextbar from top of page
 </div>
 {% endif %}
 <p> <b>Users With Access:</b></p>
-  {% for user in users_with_perms %} 
-  <p>
-    <span>
-    {{user.name}}
-    {% if user.owner %}
-      (Owner)
-    {% elif can_invite_to_portfolio %}
-      <form name="assign_owner_permissions" method="post" action="{% url 'update_permissions' %}">{% csrf_token %}
-        <input type="hidden" id="portfolio_id" name="portfolio_id" value={{portfolio.id}}>
-        <input type="hidden" id="user_id" name="user_id" value={{user.id}}>
-        <input type="hidden" id="permission" name="permission" value="remove_permissions">
-        <input type="hidden" name="next" value="{{ request.path }}">
-        <input type="submit" value="Remove" />
-      </form>
-      <form name="assign_owner_permissions" method="post" action="{% url 'update_permissions' %}">{% csrf_token %}
-        <input type="hidden" id="portfolio_id" name="portfolio_id" value={{portfolio.id}}>
-        <input type="hidden" id="user_id" name="user_id" value={{user.id}}>
-        <input type="hidden" id="permission" name="permission" value="grant_owner_permission">
-        <input type="hidden" name="next" value="{{ request.path }}">
-        <input type="submit" value="Make Owner" />
-      </form>
-    {%endif%}
-    </span>
-  </p>
+{% for user in users_with_perms %}
+<p class="inline"> {{user.name}} </span>
+  {% if user.owner %}
+  (Owner)
+</p>
+{% elif can_invite_to_portfolio %}
+<form name="assign_owner_permissions" method="post" action="{% url 'update_permissions' %}" class="inline">
+  {% csrf_token %}
+  <input type="hidden" id="portfolio_id" name="portfolio_id" value={{portfolio.id}}>
+  <input type="hidden" id="user_id" name="user_id" value={{user.id}}>
+  <input type="hidden" id="permission" name="permission" value="remove_permissions">
+  <input type="hidden" name="next" value="{{ request.path }}">
+  <input type="submit" value="Remove" class="btn btn-sm btn-danger"/>
+</form>
+<form name="assign_owner_permissions" method="post" action="{% url 'update_permissions' %}" class="inline">
+  {% csrf_token %}
+  <input type="hidden" id="portfolio_id" name="portfolio_id" value={{portfolio.id}}>
+  <input type="hidden" id="user_id" name="user_id" value={{user.id}}>
+  <input type="hidden" id="permission" name="permission" value="grant_owner_permission">
+  <input type="hidden" name="next" value="{{ request.path }}">
+  <input type="submit" value="Make Owner" class="btn btn-sm btn-success" />
+</form>
+{%endif%}
+</p>
 
   {% endfor %} 
     {{ block.super }} 
