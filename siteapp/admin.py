@@ -116,6 +116,7 @@ class ProjectMembershipAdmin(admin.ModelAdmin):
 
 class PortfolioAdmin(GuardedModelAdmin):
     list_display = ('title', 'description')
+    fields = ('title', 'description')
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Organization, OrganizationAdmin)
