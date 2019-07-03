@@ -1139,12 +1139,10 @@ def update_permissions(request):
 def portfolio_list(request):
     """List portfolios"""
     return render(request, "portfolios/index.html", {
-        "portfolios": Portfolio.get_all_readable_by(request.user) if request.user.is_authenticated else None,
-        "portfolio_perms": get_perms(request.user, Portfolio),
+        "portfolios": Portfolio.get_all_readable_by(request.user) if request.user.is_authenticated else None
     })
 
 @login_required
-@permission_required_or_403('siteapp.create_portfolio')
 def new_portfolio(request):
     """Form to create new portfolios"""
 
@@ -1166,8 +1164,18 @@ def new_portfolio(request):
 
     return render(request, 'portfolios/form.html', {'form': form})
 
-@login_required
-@permission_required_or_403('siteapp.view_portfolio')
+def portfolio_read_required(f):
+    @login_required
+    def g(request, pk):
+        portfolio = get_object_or_404(Portfolio, pk=pk)
+
+        # Check authorization.
+        if not request.user.has_perm('view_portfolio', portfolio):
+            return HttpResponseForbidden()
+        return f(request, portfolio.id)
+    return g
+
+@portfolio_read_required
 def portfolio_projects(request, pk):
   """List of projects within a portfolio"""
   portfolio = Portfolio.objects.get(pk=pk)
