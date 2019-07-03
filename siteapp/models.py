@@ -6,7 +6,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import RegexValidator
-from guardian.shortcuts import get_objects_for_user, assign_perm, get_perms_for_model, get_users_with_perms
+from guardian.shortcuts import get_objects_for_user, assign_perm, remove_perm, get_perms_for_model, get_users_with_perms
 
 from jsonfield import JSONField
 
@@ -364,17 +364,20 @@ class Portfolio(models.Model):
     def get_all_readable_by(user):
         return get_objects_for_user(user, 'siteapp.view_portfolio')
 
-    @staticmethod
-    def assign_owner_permissions(user, portfolio):
+    def assign_owner_permissions(self, user):
         permissions = get_perms_for_model(Portfolio)
         for perm in permissions:
-            assign_perm(perm.codename, user, portfolio)
+            assign_perm(perm.codename, user, self)
 
-    @staticmethod
-    def assign_editor_permissions(user, portfolio):
+    def assign_editor_permissions(self, user):
         permissions = ['view_portfolio', 'change_portfolio', 'add_portfolio']
         for perm in permissions:
-            assign_perm(perm, user, portfolio)
+            assign_perm(perm, user, self)
+
+    def remove_permissions(self, user):
+        permissions = get_perms_for_model(Portfolio)
+        for perm in permissions:
+            remove_perm(perm.codename, user, self)
 
     @staticmethod
     def assign_viewer_permissions(user, portfolio):
@@ -383,15 +386,14 @@ class Portfolio(models.Model):
     def get_invitation_verb_inf(self, invitation):
         return "to view"
 
-    def formatted_users_with_perms(self):
+    def users_with_perms(self):
         users_with_perms = get_users_with_perms(self, attach_perms=True)
-        formatted_users = []
+        users = []
         for user in users_with_perms:
-            owner = '(owner)' if user.has_perm('can_grant_portfolio_owner_permission') else ''
             name = user.name() if user.name() else user
-            display_name = '{name} {owner}'.format(name=name, owner=owner)
-            formatted_users.append(display_name)
-        return formatted_users
+            user = {'id': user.id, 'name': name, 'owner': user.has_perm('can_grant_portfolio_owner_permission')}
+            users.append(user)
+        return users
 
 class Folder(models.Model):
     """A folder is a collection of Projects."""

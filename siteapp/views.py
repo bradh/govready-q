@@ -1121,8 +1121,35 @@ def project_upgrade_app(request, project):
 
 # PORTFOLIOS
 
-def portfolio_read_required(f):
-  pass
+@permission_required_or_403('siteapp.can_grant_portfolio_owner_permission')
+def assign_owner_permissions(request):
+  portfolio_id = request.POST.get('portfolio_id')
+  user_id = request.POST.get('user_id')
+  portfolio = Portfolio.objects.get(id=portfolio_id)
+  user = User.objects.get(id=user_id)
+  portfolio.assign_owner_permissions(user)
+  next = request.POST.get('next', '/')
+  return HttpResponseRedirect(next)
+
+@permission_required_or_403('siteapp.can_grant_portfolio_permission')
+def assign_editor_permissions(request):
+  portfolio_id = request.POST.get('portfolio_id')
+  user_id = request.POST.get('user_id')
+  portfolio = Portfolio.objects.get(id=portfolio_id)
+  user = User.objects.get(id=user_id)
+  portfolio.assign_editor_permissions(user)
+  next = request.POST.get('next', '/')
+  return HttpResponseRedirect(next)
+
+@permission_required_or_403('siteapp.can_grant_portfolio_owner_permission')
+def remove_permissions(request):
+  portfolio_id = request.POST.get('portfolio_id')
+  user_id = request.POST.get('user_id')
+  portfolio = Portfolio.objects.get(id=portfolio_id)
+  user = User.objects.get(id=user_id)
+  portfolio.remove_permissions(user)
+  next = request.POST.get('next', '/')
+  return HttpResponseRedirect(next)
 
 @login_required
 def portfolio_list(request):
@@ -1148,7 +1175,7 @@ def new_portfolio(request):
       if form.is_valid():
         form.save()
         portfolio = form.instance
-        Portfolio.assign_owner_permissions(request.user, portfolio)
+        portfolio.assign_owner_permissions(request.user)
         return HttpResponseRedirect('/portfolios')
     else:
         form = PortfolioForm()
@@ -1166,7 +1193,7 @@ def portfolio_projects(request, pk):
       "projects": projects,
       "can_invite_to_portfolio": True,
       "send_invitation": Invitation.portfolio_form_context_dict(request.user, portfolio, [request.user]),
-      "users_with_perms": portfolio.formatted_users_with_perms()
+      "users_with_perms": portfolio.users_with_perms()
       })
 
 # INVITATIONS
@@ -1194,7 +1221,7 @@ def send_invitation(request):
         # Find the Portfolio and grant permissions to the user being invited
         if request.POST.get("portfolio"):
           from_portfolio = Portfolio.objects.filter(id=request.POST["portfolio"]).first()
-          Portfolio.assign_editor_permissions(to_user, from_portfolio)
+          from_portfolio.assign_editor_permissions(to_user)
           from_project = None
         # Validate that the user is a member of from_project. Is None
         # if user is not a project member.

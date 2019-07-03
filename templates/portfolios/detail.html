@@ -56,10 +56,6 @@ Remove contextbar from top of page
 <p>This portfolio has {{ projects|length }} project{{ projects|pluralize }}</p>
 {% endif %}
 
-<p> <b>Users with access to this portfolio:</b>
-  <span> {{ users_with_perms|join:", " }} </span>
-</p>
-
 <div class="container">
 {% for project in projects %}
 <div class="row" style="border-top: 1px solid #aaa;padding: 8px 0px 8px 0px;">
@@ -109,8 +105,33 @@ Remove contextbar from top of page
   </div>
 </div>
 {% endif %}
+<p> <b>Users With Access:</b></p>
+  {% for user in users_with_perms %} 
+  <p>
+    <span>
+    {{user.name}}
+    {% if user.owner %}
+      (Owner)
+    {% elif can_invite_to_portfolio %}
+      <form name="assign_owner_permissions" method="post" action="{% url 'remove_permissions' %}">{% csrf_token %}
+        <input type="hidden" id="portfolio_id" name="portfolio_id" value={{portfolio.id}}>
+        <input type="hidden" id="user_id" name="user_id" value={{user.id}}>
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <input type="submit" value="Remove" />
+      </form>
+      <form name="assign_owner_permissions" method="post" action="{% url 'assign_owner_permissions' %}">{% csrf_token %}
+        <input type="hidden" id="portfolio_id" name="portfolio_id" value={{portfolio.id}}>
+        <input type="hidden" id="user_id" name="user_id" value={{user.id}}>
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <input type="submit" value="Make Owner" />
+      </form>
+    {%endif%}
+    </span>
+  </p>
 
+  {% endfor %} 
     {{ block.super }} 
+
 {% endblock %}
 
 

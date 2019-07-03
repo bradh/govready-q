@@ -47,6 +47,9 @@ urlpatterns = [
     url(r'^portfolios$', views.portfolio_list),
     url(r'^portfolios/new$', views.new_portfolio),
     url(r'^portfolios/(?P<pk>.*)/projects$', views.portfolio_projects),
+    url(r'^portfolio/assign_owner_permissions', views.assign_owner_permissions, name="assign_owner_permissions"),
+    url(r'^portfolio/assign_editor_permissions', views.assign_editor_permissions, name="assign_editor_permissions"),
+    url(r'^portfolio/remove_permissions', views.remove_permissions, name="remove_permissions"),
 
     # org groups
     url(r'^groups$', views_landing.org_groups),
