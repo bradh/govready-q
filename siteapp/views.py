@@ -1152,7 +1152,7 @@ def new_portfolio(request):
 
       class Meta:
         model = Portfolio
-        fields = ['title', 'description', 'projects']
+        fields = ['title', 'description']
 
     if request.method == 'POST':
       form = PortfolioForm(request.POST)
