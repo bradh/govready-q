@@ -356,7 +356,6 @@ class Portfolio(models.Model):
     class Meta:
         permissions = (
             ('view_portfolio', 'View portfolio'),
-            ('can_grant_portfolio_permission', 'Grant a user portfolio permission'),
             ('can_grant_portfolio_owner_permission', 'Grant a user portfolio owner permission'),
         )
 
