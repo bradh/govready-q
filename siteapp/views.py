@@ -1183,7 +1183,7 @@ def portfolio_projects(request, pk):
   return render(request, "portfolios/detail.html", {
       "portfolio": portfolio,
       "projects": projects,
-      "can_invite_to_portfolio": True,
+      "can_invite_to_portfolio": request.user.has_perm('can_grant_portfolio_owner_permission', portfolio),
       "send_invitation": Invitation.portfolio_form_context_dict(request.user, portfolio, [request.user]),
       "users_with_perms": portfolio.users_with_perms()
       })
