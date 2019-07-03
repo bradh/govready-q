@@ -976,8 +976,8 @@ class Invitation(models.Model):
         return {
             "portfolio_id": portfolio.id,
             "portfolio_title": portfolio.title,
-            "users": [{ "id": user.id, "name": str(user)} ],
-            "can_add_invitee_to_team": True, # TODO add permissions can_grant_portfolio_permission
+            "users": [{ "id": user.id, "name": str(user) }
+                for user in User.objects.all()]
         }
 
     @staticmethod
