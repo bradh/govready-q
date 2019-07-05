@@ -40,7 +40,7 @@ WARNINGS=0
 
 # Have docker-machine create the ec2 instance to host docker
 docker-machine create --driver amazonec2 --amazonec2-open-port 80 --amazonec2-region $AWS_REGION $DM_NAME
-d
+
 # Let's grab the Host machine's Public and Private IP addresses
 PRIVATE_IP=$(docker-machine inspect -f '{{ .Driver.PrivateIPAddress }}' $DM_NAME)
 echo $PRIVATE_IP
@@ -60,7 +60,7 @@ govready/govready-q-0.9.0
 # Configure Superuser account for GovReady-Q
 docker exec -it govready-q-0.9.0 first_run
 
-# Provide some frienly feedback
+# Provide some friendly feedback
 echo " "
 echo "Point your browser to http://$PUBLIC_IP"
 echo "To stop container run: docker-machine stop $DM_NAME"
