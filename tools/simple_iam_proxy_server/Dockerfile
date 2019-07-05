@@ -4,8 +4,7 @@
 #   docker build --tag govready/simple-iamproxy .
 #
 # Run examples:
-#   Start the IAM proxy:
-#   docker run -it -p 8000:8000 --name govready-q-iam -t --rm govready/simple-iamproxy
+#   docker run -it -p 8000:8000 --name govready-q-iam --rm govready/simple-iamproxy
 
 # Build on Docker's official CentOS 7 image.
 FROM centos:7
