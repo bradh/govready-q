@@ -1,18 +1,21 @@
 # Build GocReady Simple IAM PROXY for IAM Single-Sign-On testing
 #
 # Build examples:
-#   docker build --rm --tag govready/simple-iamproxy .
-#   docker build --rm --tag govready/simple-iamproxy:local .
+#   docker build --tag govready/simple-iamproxy .
 #
 # Run examples:
-#   docker run -it -p 80:8080 -d govready/simple-iamproxy
-#   docker run -it -p 80:8080 -e BIND_PORT=8080 -d govready/simple-iamproxy
+#   docker run -it -p 8000:8000 --name govready-q-iam --rm govready/simple-iamproxy
 
 # Build on Docker's official CentOS 7 image.
 FROM centos:7
 
-# Expose the port docker uses for http by default.
-EXPOSE 8080
+# Expose the port that the Python backend binds to by default.
+EXPOSE 8000
+
+# Set environment variables that the Python backend will read.
+# The server must bind to 0.0.0.0 in the container for Docker
+# port forwarding with -p to work.
+ENV BIND_HOST 0.0.0.0
 
 # Put the Python source code here.
 WORKDIR /usr/src/app
