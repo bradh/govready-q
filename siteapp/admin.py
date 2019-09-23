@@ -2,7 +2,7 @@ from django.contrib import admin
 
 import django.contrib.auth.admin as contribauthadmin
 
-from .models import User, Organization, Folder, Project, ProjectMembership
+from .models import User, Organization, Folder, Project, ProjectMembership, Invitation
 
 def all_user_fields_still_exist(fieldlist):
     for f in fieldlist:
@@ -130,9 +130,13 @@ class ProjectMembershipAdmin(admin.ModelAdmin):
     def organization(self, obj):
         return obj.project.organization
 
+class InvitationAdmin(admin.ModelAdmin):
+    list_display = ('to_email', 'from_user', 'created', 'sent_at')
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Folder, FolderAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(ProjectMembership, ProjectMembershipAdmin)
+admin.site.register(Invitation, InvitationAdmin)
 
