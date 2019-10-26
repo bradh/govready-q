@@ -50,12 +50,10 @@ def systeminstance_hostinstances_list(request, pk):
 def hostinstance(request, pk):
     """HostInstance detail"""
     # TODO: Restrict to user's permissions
-    print("** hostinstance ** pk: {}".format(pk))
+    # print("** hostinstance ** pk: {}".format(pk))
     try:
         hostinstance = HostInstance.objects.get(id=pk)
-        print("* try works *")
     except:
-        print("* try fails *")
         hostinstance = None
         # return HttpResponseNotFound("404 - page not found.")
 
@@ -99,6 +97,8 @@ def hostinstance(request, pk):
 
     else:
         agent_service_data_pretty = "Agent Service not defined or not supported."
+        agent_service_data = None
+        checks_total = checks_pass = checks_pass_percent = checks_fail = checks_fail_percent = agent_service_data_pkgs = agent_service_data_pkgs = agent_service_data_pkgs_pretty = None
 
     return render(request, "itsystems/hostinstance.html", {
         "hostinstance": hostinstance,
