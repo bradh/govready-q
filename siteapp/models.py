@@ -471,7 +471,7 @@ class Project(models.Model):
     organization = models.ForeignKey(Organization, blank=True, null=True, related_name="projects", on_delete=models.CASCADE, help_text="The Organization that this Project belongs to. User profiles (is_account_project is True) are not a part of any Organization.")
     portfolio = models.ForeignKey(Portfolio, blank=True, null=True, related_name="projects", on_delete=models.CASCADE, help_text="The Portfolio that this Project belongs to.")
     is_organization_project = models.NullBooleanField(default=None, help_text="Each Organization has one Project that holds Organization membership privileges and Organization settings (in its root Task). In order to have a unique_together constraint with Organization, only the values None (which need not be unique) and True (which must be unique to an Organization) are used.")
-    SystemInstance = models.ForeignKey(SystemInstance, blank=True, null=True, related_name="projects", on_delete=models.SET_NULL, help_text="The IT System to which this Projectis associated.")
+    systeminstance = models.ForeignKey(SystemInstance, blank=True, null=True, related_name="projects", on_delete=models.SET_NULL, help_text="The IT System to which this Projectis associated.")
 
     is_account_project = models.BooleanField(default=False, help_text="Each User has one Project for account Tasks.")
 
