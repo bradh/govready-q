@@ -4,6 +4,7 @@ __pycache__/
 /modules/local
 siteapp/static/vendor
 apps/
+notes/
 
 # generated files
 .bash_history
