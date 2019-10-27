@@ -39,7 +39,7 @@ def hostinstance_list(request):
     })
 
 @login_required
-def agent_list(request):
+def agents_list(request):
     """List host instances"""
     # TODO: Restrict to user's permissions
     return render(request, "itsystems/agent_index.html", {
@@ -58,24 +58,13 @@ def systeminstance_hostinstances_list(request, pk):
     })
 
 @login_required
-def components_list(request):
-    """List host instances"""
-    # TODO: Restrict to user's permissions
-    return render(request, "itsystems/component_index.html", {
-        "component": Component.objects.all(),
-    })
-
-
-@login_required
 def hostinstance(request, pk):
     """HostInstance detail"""
     # TODO: Restrict to user's permissions
     print("** hostinstance ** pk: {}".format(pk))
     try:
         hostinstance = HostInstance.objects.get(id=pk)
-        print("* try works *")
     except:
-        print("* try fails *")
         hostinstance = None
         # return HttpResponseNotFound("404 - page not found.")
 
@@ -175,16 +164,13 @@ def new_hostinstance(request):
 @login_required
 def new_agent(request):
     """Form to create new agent"""
-    # return HttpResponse("This is for new agent.")
-    """Form to create new system instances"""
-    # return HttpResponse("This is for new host instance.")
     if request.method == 'POST':
       form = AgentForm(request.POST)
       if form.is_valid():
         form.save()
         agent = form.instance
         # systeminstance.assign_owner_permissions(request.user)
-        return redirect('systeminstance_hostinstances_list', pk=agent.host_instance.pk)
+        return redirect('agents_list')
     else:
         form = AgentForm()
 
@@ -208,7 +194,7 @@ def new_components(request):
         form.save()
         component = form.instance
         # systeminstance.assign_owner_permissions(request.user)
-        return redirect('components_list', pk=component.pk)
+        return redirect('components_list')
     else:
         form = ComponentForm()
 
@@ -217,11 +203,10 @@ def new_components(request):
         "component_form": ComponentForm(request.user),
     })
 
-
-
-
-
-
-
-
-
+@login_required
+def components_list(request):
+    """List host instances"""
+    # TODO: Restrict to user's permissions
+    return render(request, "itsystems/component_index.html", {
+        "component": Component.objects.all(),
+    })
