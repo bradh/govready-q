@@ -21,12 +21,12 @@ Your Host Instances
     </div>
 
     <h2 class="">Host Instance</h2>
-    {% if hostinstances|length > 0 %}
-    <p>You have access to {{ hostinstances|length }} Host Instance{{ hostinstances|pluralize }}</p>
+    {% if hosts|length > 0 %}
+    <p>You have access to {{ hosts|length }} Host Instance{{ hosts|pluralize }}</p>
     {% else %}
     <p>You do not have access to any Host Instances.</p>
     {% endif %}
 
-    {% include "itsystems/hostinstances_table.html" with hostinstances=hostinstances %}
+    {% include "itsystems/hosts_table.html" with hosts=hosts %}
 
     {% endblock %}

@@ -5,7 +5,7 @@ from guardian.shortcuts import (assign_perm, get_objects_for_user,
                                 get_users_with_perms, remove_perm)
 
 
-class SystemInstance(models.Model):
+class System(models.Model):
     name = models.CharField(max_length=255, unique=True, help_text="The name of this IT System Instance.")
     sdlc_stage = models.CharField(max_length=24, null=True, blank=True, help_text="The stage of the System Development Life Cycle System is in.")
     created = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -18,14 +18,14 @@ class SystemInstance(models.Model):
     def get_absolute_url(self):
         return "/itsystems/%s/" % (self.id)
 
-    def get_hostinstances(self):
-        return HostInstance.objects.filter(system_instance__pk=self.pk)
+    def get_hosts(self):
+        return Host.objects.filter(system__pk=self.pk)
 
-class HostInstance(models.Model):
+class Host(models.Model):
     name = models.CharField(max_length=255, unique=True, help_text="The name of this Host Instance (e.g., workload/endpoint/server).")
     host_type = models.CharField(max_length=24, null=True, blank=True, help_text="A categorization of the host.")
     os = models.CharField(max_length=155, null=True, blank=True, help_text="The Operating System running on the Host Instance.")
-    system_instance = models.ForeignKey(SystemInstance, blank=True, null=True, related_name="hostinstances", on_delete=models.SET_NULL, help_text="The SystemInstance to which this HostInstance belongs.")
+    system = models.ForeignKey(System, blank=True, null=True, related_name="hosts", on_delete=models.SET_NULL, help_text="The System to which this Host belongs.")
     created = models.DateTimeField(auto_now_add=True, db_index=True)
     updated = models.DateTimeField(auto_now=True, db_index=True)
 
@@ -34,10 +34,10 @@ class HostInstance(models.Model):
         return self.name
 
     def get_agents(self):
-        return Agent.objects.filter(host_instance__pk=self.pk)
+        return Agent.objects.filter(host__pk=self.pk)
 
     def get_first_agent(self):
-        return Agent.objects.filter(host_instance__pk=self.pk)[0]
+        return Agent.objects.filter(host__pk=self.pk)[0]
 
 class AgentService(models.Model):
     name = models.CharField(max_length=255, null=False, blank=False, unique=True, help_text="The name of this endpoint/host Agent Service .")
@@ -53,7 +53,7 @@ class AgentService(models.Model):
 class Agent(models.Model):
     agent_id = models.CharField(max_length=24, null=False, blank=False, help_text="The unique identifier of an installed Agent on a Host Instance.")
     agent_service = models.ForeignKey(AgentService, null=False, blank=False, related_name="agents", on_delete="CASCADE", help_text="The AgentService to which this Agent belonts.")
-    host_instance = models.ForeignKey(HostInstance, null=True, blank=True, related_name="agents", on_delete="models.SET_NULL", help_text="The HostInstance on which the Agent is installed and monitoring.")
+    host = models.ForeignKey(Host, null=True, blank=True, related_name="agents", on_delete="models.SET_NULL", help_text="The Host on which the Agent is installed and monitoring.")
     created = models.DateTimeField(auto_now_add=True, db_index=True)
     updated = models.DateTimeField(auto_now=True, db_index=True)
 

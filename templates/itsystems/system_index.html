@@ -21,12 +21,12 @@ Your IT Systems
     </div>
 
     <h2 class="">IT Systems</h2>
-    {% if systeminstances|length > 0 %}
-    <p>You have access to {{ systeminstances|length }} IT System{{ systeminstances|pluralize }}</p>
+    {% if systems|length > 0 %}
+    <p>You have access to {{ systems|length }} IT System{{ systems|pluralize }}</p>
     {% else %}
     <p>You do not have access to any IT Systems.</p>
     {% endif %}
 
-    {% include "itsystems/systeminstances_table.html" with systeminstances=systeminstances %}
+    {% include "itsystems/systems_table.html" with systems=systems %}
 
     {% endblock %}

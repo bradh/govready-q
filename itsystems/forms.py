@@ -1,43 +1,43 @@
 from django import forms
 from django.forms import ModelForm
 
-from itsystems.models import SystemInstance
-from itsystems.models import HostInstance
+from itsystems.models import System
+from itsystems.models import Host
 from itsystems.models import Agent
 from itsystems.models import Component
 from itsystems.models import Vendor
 
-class SystemInstanceForm(ModelForm):
+class SystemForm(ModelForm):
 
     class Meta:
-        model = SystemInstance
+        model = System
         fields = ['name', 'sdlc_stage']
         labels = {
             'name': ('Name'),
             'sdlc_stage': ('Software Development Life Cycle (SDLC) Stage'),
         }
 
-class HostInstanceForm(ModelForm):
+class HostForm(ModelForm):
 
     class Meta:
-        model = HostInstance
-        fields = ['name', 'host_type', 'os', 'system_instance']
+        model = Host
+        fields = ['name', 'host_type', 'os', 'system']
         labels = {
             'name': ('Name'),
             'host_type': ('Host Type'),
             'os': ('Operating System'),
-            'system_instance': ('System Instance'),
+            'system': ('System Instance'),
         }
 
 class AgentForm(ModelForm):
 
     class Meta:
         model = Agent
-        fields = ['agent_id', 'agent_service', 'host_instance',]
+        fields = ['agent_id', 'agent_service', 'host',]
         labels = {
             'agent_id': ('Agent Id'),
             'agent_service': ('Agent Service'),
-            'host_instance': ('Host Instance'),
+            'host': ('Host Instance'),
         }
 
 class VendorForm(ModelForm):

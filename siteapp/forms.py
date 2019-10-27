@@ -2,8 +2,8 @@ from django import forms
 from django.forms import ModelForm
 
 from .models import Portfolio, Project
-from itsystems.models import SystemInstance
-from itsystems.models import HostInstance
+from itsystems.models import System
+from itsystems.models import Host
 
 class ProjectForm(ModelForm):
     class Meta:

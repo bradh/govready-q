@@ -2,11 +2,11 @@
 {% load q %}
 
 {% block title %}
-{{hostinstance.name}}
+{{host.name}}
 {% endblock %}
 
 {% block breadcrumbs %}
-<li class="active">{{hostinstance.name}} xx</li>
+<li class="active">{{host.name}} xx</li>
 {% endblock %}
 
 <!-- Remove contextbar from top of page -->
@@ -20,15 +20,15 @@
       <a id="new-agent" href="/itsystems/agents/new" class="btn btn-success">Create an Agent</a>
     </div>
 
-    <h2 class=""><a href="/itsystems/{{ hostinstance.system_instance.id }}/hosts" style="color: black;">{{ hostinstance.system_instance.name }}</a> / {{hostinstance.name}}</h2>
+    <h2 class=""><a href="/itsystems/{{ host.system.id }}/hosts" style="color: black;">{{ host.system.name }}</a> / {{host.name}}</h2>
 
     <!-- <p><a href="http://35.175.122.207:5601/app/wazuh#/agents?_g=()&agent={{agent.agent_id}}&_a=(columns:!(_source),index:'wazuh-alerts-3.x-*',interval:auto,query:(language:kuery,query:''),sort:!(timestamp,desc))&tab=welcome">view agent details</a> ({{agent.agent_id}})</p> -->
 
-    <!-- <h3>Data from {{ hostinstance.name }}</h3>
+    <!-- <h3>Data from {{ host.name }}</h3>
     <p><pre>{{agent_service_data_pretty}}</pre></p> -->
     <p>Example display of data collected live from Host</p>
 
-    <h3 style="border-bottom:1px solid gray;font-weight: bold;">CIS Scan Summary for {{hostinstance.name}}</h3>
+    <h3 style="border-bottom:1px solid gray;font-weight: bold;">CIS Scan Summary for {{host.name}}</h3>
     <table class="table">
         <thead>
         <tr>
@@ -59,7 +59,7 @@
     {% endfor %}
     </table>
 
-    <h3 style="border-bottom:1px solid gray;font-weight: bold;">{{ agent_service_data_pkgs.data.items|length }} software packages installed on {{hostinstance.name}}</h3>
+    <h3 style="border-bottom:1px solid gray;font-weight: bold;">{{ agent_service_data_pkgs.data.items|length }} software packages installed on {{host.name}}</h3>
 
     <table class="table">
         <thead>
@@ -73,6 +73,6 @@
     {% endfor %}
     </table>
 
-    <!-- <h3>Data from {{ hostinstance.name }}</h3>
+    <!-- <h3>Data from {{ host.name }}</h3>
     <p><pre>{{agent_service_data_pkgs_pretty}}</pre></p> -->
     {% endblock %}

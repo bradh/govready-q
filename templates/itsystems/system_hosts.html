@@ -2,11 +2,11 @@
 {% load q %}
 
 {% block title %}
-{{systeminstance.name}}
+{{system.name}}
 {% endblock %}
 
 {% block breadcrumbs %}
-<li class="active">{{systeminstance.name}} Hosts</li>
+<li class="active">{{system.name}} Hosts</li>
 {% endblock %}
 
 <!-- Remove contextbar from top of page -->
@@ -20,13 +20,13 @@
       <a id="new-itsystem-host" href="/itsystems/hosts/new" class="btn btn-success">Add a Host</a>
     </div>
 
-    <h2 class="">{{ systeminstance.name }} / Hosts</h2>
-    {% if hostinstances|length > 0 %}
-    <p>{{ systeminstance.name }} contains {{ hostinstances|length }} Host{{ hostinstances|pluralize }}</p>
+    <h2 class="">{{ system.name }} / Hosts</h2>
+    {% if hosts|length > 0 %}
+    <p>{{ system.name }} contains {{ hosts|length }} Host{{ hosts|pluralize }}</p>
     {% else %}
     <p>You do not have access to any Hosts for this IT System.</p>
     {% endif %}
 
-    {% include "itsystems/systeminstance_hostinstances_table.html" with hostinstances=hostinstances %}
+    {% include "itsystems/system_hosts_table.html" with hosts=hosts %}
 
     {% endblock %}

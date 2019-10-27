@@ -1,8 +1,8 @@
-<!-- List of systeminstances -->
+<!-- List of systems -->
 {% load humanize %}
 {% load guardian_tags %}
 
-{% if hostinstances %}
+{% if hosts %}
 <div class="container">
 <div class="row">
   <div class="col-xs-10 col-md-5">Host Instance Name</div>
@@ -13,24 +13,24 @@
 </div>
 {% endif %}
 
-  {% for hostinstance in hostinstances %}
+  {% for host in hosts %}
   <div class="row" style="border-top: 1px solid #aaa;padding: 8px 0px 8px 0px;">
 
     <div class="col-xs-10 col-md-5">
       <div>
         <span class="glyphicon glyphicon-hdd"></span>&nbsp;&nbsp;&nbsp;
-        <a href="/itsystems/agent/list" id="systeminstance_{{systeminstance.name}}" style="color: black;">{{hostinstance.name}}</a>
+        <a href="/itsystems/agent/list" id="system_{{system.name}}" style="color: black;">{{host.name}}</a>
       </div>
     </div>
 
-    <div class="col-md-1"><small style="color: #888;">{{hostinstance.host_type}}</small></div>
+    <div class="col-md-1"><small style="color: #888;">{{host.host_type}}</small></div>
 
-    <div class="col-md-1"><small style="color: #888;">{{hostinstance.os}}</small></div>
+    <div class="col-md-1"><small style="color: #888;">{{host.os}}</small></div>
 
     <div class="col-md-2">&nbsp;</div>
 
     <div class="col-xs-12 col-md-2" style="text-align: left;"><small style="color: #888;">
-        {{hostinstance.created|naturaltime}}</small></div>
+        {{host.created|naturaltime}}</small></div>
   </div>
   {% endfor %}
 

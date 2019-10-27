@@ -10,12 +10,12 @@ Represent "Systems", "Hosts", and "Agents" in GovReady to facilitate data exchan
 
 **UX changes:**
 
-* New screens and admin screens for SystemInstances, HostInstances, AgentServices, and Agents.
+* New screens and admin screens for Systems, Hosts, AgentServices, and Agents.
 
 
 **Developer changes:**
 
-* New models for SystemInstances, HostInstances, AgentServices, and Agents.
+* New models for Systems, Hosts, AgentServices, and Agents.
 
 v0.9.0.2.1.1 (October 24, 2019)
 -------------------------------

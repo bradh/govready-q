@@ -6,8 +6,8 @@ from django.utils import timezone
 from django.db import transaction
 from django import forms
 from django.forms import ModelForm
-from itsystems.forms import SystemInstanceForm
-from itsystems.forms import HostInstanceForm
+from itsystems.forms import SystemForm
+from itsystems.forms import HostForm
 from itsystems.forms import AgentForm
 from itsystems.forms import ComponentForm
 from itsystems.forms import VendorForm
@@ -15,7 +15,7 @@ import json
 
 import re
 
-from .models import SystemInstance, HostInstance, AgentService, Agent, Component, Vendor
+from .models import System, Host, AgentService, Agent, Component, Vendor
 
 # Create your views here.
 
@@ -23,19 +23,19 @@ def index(request):
     return HttpResponse("Hello, world. You're at the itsystems index.")
 
 @login_required
-def systeminstance_list(request):
+def system_list(request):
     """List system instances"""
     # TODO: Restrict to user's permissions
-    return render(request, "itsystems/systeminstance_index.html", {
-        "systeminstances": SystemInstance.objects.all(),
+    return render(request, "itsystems/system_index.html", {
+        "systems": System.objects.all(),
     })
 
 @login_required
-def hostinstance_list(request):
+def host_list(request):
     """List host instances"""
     # TODO: Restrict to user's permissions
-    return render(request, "itsystems/hostinstance_index.html", {
-        "hostinstances": HostInstance.objects.all(),
+    return render(request, "itsystems/host_index.html", {
+        "hosts": Host.objects.all(),
     })
 
 @login_required
@@ -47,29 +47,29 @@ def agents_list(request):
     })
 
 @login_required
-def systeminstance_hostinstances_list(request, pk):
+def system_hosts_list(request, pk):
     """List system instance host intances"""
     # TODO: Restrict to user's permissions
-    systeminstance  = SystemInstance.objects.get(id=pk)
-    hostinstances = systeminstance.get_hostinstances()
-    return render(request, "itsystems/systeminstance_hostinstances.html", {
-        "systeminstance": systeminstance,
-        "hostinstances": hostinstances,
+    system  = System.objects.get(id=pk)
+    hosts = system.get_hosts()
+    return render(request, "itsystems/system_hosts.html", {
+        "system": system,
+        "hosts": hosts,
     })
 
 @login_required
-def hostinstance(request, pk):
-    """HostInstance detail"""
+def host(request, pk):
+    """Host detail"""
     # TODO: Restrict to user's permissions
-    print("** hostinstance ** pk: {}".format(pk))
+    print("** host ** pk: {}".format(pk))
     try:
-        hostinstance = HostInstance.objects.get(id=pk)
+        host = Host.objects.get(id=pk)
     except:
-        hostinstance = None
+        host = None
         # return HttpResponseNotFound("404 - page not found.")
 
     try:
-        agent = hostinstance.get_first_agent()
+        agent = host.get_first_agent()
     except:
         agent = None
         agent_service = None
@@ -80,7 +80,7 @@ def hostinstance(request, pk):
     # Name: Wazuh
     # Api_user: <api_user_name>
     # Api_pw: <api_pw>
-    # TODO: AgentService should be set by HostInstance - Agent relationship, yes?
+    # TODO: AgentService should be set by Host - Agent relationship, yes?
     agent_service = AgentService.objects.filter(name='Wazuh').first()
     if agent_service:
         agent_service_api_address = "35.175.122.207:55000"
@@ -109,8 +109,8 @@ def hostinstance(request, pk):
     else:
         agent_service_data_pretty = "Agent Service not defined or not supported."
 
-    return render(request, "itsystems/hostinstance.html", {
-        "hostinstance": hostinstance,
+    return render(request, "itsystems/host.html", {
+        "host": host,
         "agent": agent,
         "agent_service_data": agent_service_data,
         "checks_total": checks_total,
@@ -124,41 +124,41 @@ def hostinstance(request, pk):
     })
 
 @login_required
-def new_systeminstance(request):
+def new_system(request):
     """Form to create new system instances"""
     # return HttpResponse("This is for new system instance.")
     if request.method == 'POST':
-      form = SystemInstanceForm(request.POST)
+      form = SystemForm(request.POST)
       if form.is_valid():
         form.save()
-        systeminstance = form.instance
-        # systeminstance.assign_owner_permissions(request.user)
-        return redirect('systeminstance_hostinstances_list', pk=systeminstance.pk)
+        system = form.instance
+        # system.assign_owner_permissions(request.user)
+        return redirect('system_hosts_list', pk=system.pk)
     else:
-        form = SystemInstanceForm()
+        form = SystemForm()
 
-    return render(request, 'itsystems/systeminstance_form.html', {
+    return render(request, 'itsystems/system_form.html', {
         'form': form,
-        "system_instance_form": SystemInstanceForm(request.user),
+        "system_form": SystemForm(request.user),
     })
 
 @login_required
-def new_hostinstance(request):
+def new_host(request):
     """Form to create new system instances"""
     # return HttpResponse("This is for new host instance.")
     if request.method == 'POST':
-      form = HostInstanceForm(request.POST)
+      form = HostForm(request.POST)
       if form.is_valid():
         form.save()
-        hostinstance = form.instance
-        # systeminstance.assign_owner_permissions(request.user)
-        return redirect('systeminstance_hostinstances_list', pk=hostinstance.system_instance.pk)
+        host = form.instance
+        # system.assign_owner_permissions(request.user)
+        return redirect('system_hosts_list', pk=host.system.pk)
     else:
-        form = HostInstanceForm()
+        form = HostForm()
 
-    return render(request, 'itsystems/hostinstance_form.html', {
+    return render(request, 'itsystems/host_form.html', {
         'form': form,
-        "host_instance_form": HostInstanceForm(request.user),
+        "host_form": HostForm(request.user),
     })
 
 @login_required
@@ -169,7 +169,7 @@ def new_agent(request):
       if form.is_valid():
         form.save()
         agent = form.instance
-        # systeminstance.assign_owner_permissions(request.user)
+        # system.assign_owner_permissions(request.user)
         return redirect('agents_list')
     else:
         form = AgentForm()
@@ -193,7 +193,7 @@ def new_components(request):
       if form.is_valid():
         form.save()
         component = form.instance
-        # systeminstance.assign_owner_permissions(request.user)
+        # system.assign_owner_permissions(request.user)
         return redirect('components_list')
     else:
         form = ComponentForm()
