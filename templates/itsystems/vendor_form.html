@@ -10,8 +10,8 @@ Welcome to Compliance Automation
 <div class="container">
     <div class="row">
         <div class="col-md-3" style="margin: 40px 0px 30px 0px;">
-            <h2>New Component</h2>
-            <p>IT systems are composed of five components hardware, software, database, network and people. These components integrate to perform input, process, output, feedback and control.</p>
+            <h2>New Vendor</h2>
+            <p>A Vendor is a an enterprise that contributes an IT product or service for sale. </p>
         </div>
 
         <div class="col-md-9" style="margin: 40px 0px 30px 0px;">
@@ -20,7 +20,7 @@ Welcome to Compliance Automation
                     {% csrf_token %}
                     <input type=hidden name=action value=neworg>
                     {% bootstrap_form form %}
-                    <p><button type="submit" id="create-component-button" class="btn btn-success">Next &raquo;</button></p>
+                    <p><button type="submit" id="create-itsystems-button" class="btn btn-success">Next &raquo;</button></p>
                 </form>
             </div>
         </div>

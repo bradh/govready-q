@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% load q %}
+
+{% block title %}
+Your IT Systems
+{% endblock %}
+
+{% block head %}
+<style>
+  .btn .glyphicon { margin-right: 6px; }
+  .btn.btn-success .glyphicon { color: #FFF; }
+
+  .lifecycle {
+    margin-bottom: 30px;
+  }
+
+  .lifecycle h2 {
+    margin: 0 0 1em 0;
+  }
+
+  .lifecycle .stage {
+    margin: 0 -10px;
+    padding: 10px;
+    background-color: rgb(247,247,247);
+    border-radius: 5px;
+    max-width: 530px; /* so individual cards don't stretch across whole page */
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .1), 0 2px 3px rgba(0, 0, 0, .2);
+  }
+
+  .lifecycle .stage h3 {
+    color: black;
+    margin: 5px 0 0 0;
+    text-align: center;
+  }
+
+  .lifecycle .stage .stage-subhead {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+
+  .project {
+    background-color: white;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 3px;
+    border-bottom: 1px solid rgb(204, 204, 204);
+  }
+
+  .project-image {
+    width: 20px;
+    float: left;
+    margin: 4px 0 5px 8px;
+  }
+
+  .project-text {
+  }
+
+  .project-text h4 {
+    margin: 0;
+    font-weight: bold;
+    font-size: inherit;
+  }
+
+  .project-text > * {
+    margin: .5em 0 0 0;
+    font-size: 13px;
+  }
+
+  h1.mini {
+    font-size: 16px;
+    font-family: Hind, sands-serif;
+    line-height: 22px;
+    color: rgba(51, 51, 51);
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+  }
+
+  .luna-box {
+    border: 1px solid rgb(210, 210, 210);
+    min-height: 160px;
+    margin-top: 30px;
+    font-size: .8em;
+    border-radius: 4px;
+    padding: 20px 20px 0px 0px;
+  }
+
+  .luna-box div.glyphicon {
+    font-size:3em;
+    color: rgb(160, 210, 160);
+    margin:30px 0px 0px 40px;
+  }
+
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<li class="active">Your IT Systems</li>
+{% endblock %}
+
+<!-- Remove contextbar from top of page -->
+{% block contextbar %}{% endblock %}
+
+{% block body %}
+
+<div style="margin-top: 30px">
+  <div class="container">
+    <div style="float: right; margin: 0 0.5em 0em 5em;">
+      <a id="new-itsystem" href="new" class="btn btn-success">Create an IT System</a>
+    </div>
+
+    <h2 class="">IT Systems</h2>
+    {% if systems|length > 0 %}
+    <p>You have access to {{ systems|length }} IT System{{ systems|pluralize }}</p>
+    {% else %}
+    <p>You do not have access to any IT Systems.</p>
+    {% endif %}
+
+    {% include "itsystems/systems_table.html" with systems=systems %}
+
+      <div class="row">
+
+    <div class="col-sm-6">
+      <div class="luna-box">
+        <div class="col-md-3">
+          <div class="glyphicon glyphicon glyphicon-blackboard"></div>
+        </div>
+        <div class="col-md-9">
+          <h3><a id="new-project" href="list"; return false;" href="#"">IT Systems</a></h3>
+          <p>An IT system is a collection of components that support functional objectives of an organization.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6">
+      <div class="luna-box">
+        <div class="col-md-3">
+          <div class="glyphicon glyphicon glyphicon-open"></div>
+        </div>
+        <div class="col-md-9">
+          <h3><a href="hosts/list"; return false;" href="#"">Hosts</a></h3>
+          <p>A host instance is any identifiable physical or virtual computer instance part of your IT System.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6">
+      <div class="luna-box">
+        <div class="col-md-3">
+          <div class="glyphicon glyphicon glyphicon-list"></div>
+        </div>
+        <div class="col-md-9">
+          <h3><a href="components/list">Components</a></h3>
+          <p>Components are the hardware, software, database, network and people that make up an IT system.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6">
+      <div class="luna-box">
+        <div class="col-md-3">
+          <div class="glyphicon glyphicon glyphicon-repeat"></div>
+        </div>
+        <div class="col-md-9">
+          <h3><a href="agents/list">Agents</a></h3>
+          <p>An agent is a program that performs background tasks unsupervised.
+          </p>
+        </div>
+      </div>
+    </div>
+</div>
+
+    {% endblock %}

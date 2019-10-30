@@ -9,6 +9,7 @@ from django.forms import ModelForm
 from itsystems.forms import SystemForm
 from itsystems.forms import HostForm
 from itsystems.forms import AgentForm
+from itsystems.forms import AgentServiceForm
 from itsystems.forms import ComponentForm
 from itsystems.forms import VendorForm
 import json
@@ -21,6 +22,14 @@ from .models import System, Host, AgentService, Agent, Component, Vendor
 
 def index(request):
     return HttpResponse("Hello, world. You're at the itsystems index.")
+
+@login_required
+def itsystems_home(request):
+    """Show content relevant to IT systems"""
+    # TODO: Restrict to user's permissions
+    return render(request, "itsystems/itsystems_home.html", {
+        "systems": System.objects.all(),
+    })
 
 @login_required
 def system_list(request):
@@ -55,6 +64,14 @@ def system_hosts_list(request, pk):
     return render(request, "itsystems/system_hosts.html", {
         "system": system,
         "hosts": hosts,
+    })
+
+@login_required
+def components_list(request):
+    """List host instances"""
+    # TODO: Restrict to user's permissions
+    return render(request, "itsystems/component_index.html", {
+        "component": Component.objects.all(),
     })
 
 @login_required
@@ -180,9 +197,40 @@ def new_agent(request):
     })
 
 @login_required
+def new_vendor(request):
+    """Form to create new vendor"""
+    if request.method == 'POST':
+      form = VendorForm(request.POST)
+      if form.is_valid():
+        form.save()
+        vendor = form.instance
+        # system.assign_owner_permissions(request.user)
+        return redirect('components_list')
+    else:
+        form = VendorForm()
+
+    return render(request, 'itsystems/vendor_form.html', {
+        'form': form,
+        "vendor_form": VendorForm(request.user),
+    })
+
+@login_required
 def new_agentservice(request):
     """Form to create new agent service"""
-    return HttpResponse("This is for new agent service.")
+    if request.method == 'POST':
+      form = AgentServiceForm(request.POST)
+      if form.is_valid():
+        form.save()
+        agentservice = form.instance
+        # system.assign_owner_permissions(request.user)
+        return redirect('agents_list')
+    else:
+        form = AgentServiceForm()
+
+    return render(request, 'itsystems/agentservice_form.html', {
+        'form': form,
+        "agentservice_form": AgentServiceForm(request.user),
+    })
 
 @login_required
 def new_components(request):
@@ -203,10 +251,3 @@ def new_components(request):
         "component_form": ComponentForm(request.user),
     })
 
-@login_required
-def components_list(request):
-    """List host instances"""
-    # TODO: Restrict to user's permissions
-    return render(request, "itsystems/component_index.html", {
-        "component": Component.objects.all(),
-    })

@@ -17,6 +17,8 @@ urlpatterns = [
     url(r'^agents/new$', itsystems.views.new_agent),
     url(r'^agentservice/new$', itsystems.views.new_agentservice),
     url(r'^hosts/(?P<pk>.*)', itsystems.views.host),
-    url(r'', itsystems.views.system_list),
+    url(r'^vendor/new$', itsystems.views.new_vendor),
+    url(r'list', itsystems.views.system_list),
+    url(r'', itsystems.views.itsystems_home),
 
 ]

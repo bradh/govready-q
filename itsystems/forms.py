@@ -4,6 +4,7 @@ from django.forms import ModelForm
 from itsystems.models import System
 from itsystems.models import Host
 from itsystems.models import Agent
+from itsystems.models import AgentService
 from itsystems.models import Component
 from itsystems.models import Vendor
 
@@ -29,13 +30,24 @@ class HostForm(ModelForm):
             'system': ('System Instance'),
         }
 
+class AgentServiceForm(ModelForm):
+
+    class Meta:
+        model = AgentService
+        fields = ['name', 'api_user', 'api_pw',]
+        labels = {
+            'name': ('Name'),
+            'api_user': ('API User'),
+            'api_pw': ('API Password'),
+        }
+
 class AgentForm(ModelForm):
 
     class Meta:
         model = Agent
         fields = ['agent_id', 'agent_service', 'host',]
         labels = {
-            'agent_id': ('Agent Id'),
+            'agent_id': ('Agent ID'),
             'agent_service': ('Agent Service'),
             'host': ('Host Instance'),
         }
