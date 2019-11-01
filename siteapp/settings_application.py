@@ -61,7 +61,8 @@ DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': DEBUG_TOOLBAR_SHOW_TOOLBAR_CALLBACK,
 }
 
-LOGIN_REDIRECT_URL = "/projects"
+# LOGIN_REDIRECT_URL = "/projects"
+LOGIN_REDIRECT_URL="/signon_banner"
 EMAIL_DOMAIN = environment.get("email", {}).get("domain", environment["host"].split(":")[0])
 SERVER_EMAIL = ("GovReady Q <q@%s>" % EMAIL_DOMAIN)
 DEFAULT_FROM_EMAIL = SERVER_EMAIL

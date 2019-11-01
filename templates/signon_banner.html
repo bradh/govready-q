@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Sign On Banner
+{% endblock %}
+
+{% block head %}
+<style>
+	form {
+	  width: 100%;
+	  max-width: 980px;
+	  margin: 0 auto;
+	}
+
+	.scroll-box {
+	  overflow-y: scroll;
+	  width: 500px;
+	  height: 400px;
+	  margin: 0 auto;
+	}
+
+	.tos-title {
+		margin: auto;
+		width: 50%;
+		font-size: 30px;
+	}
+
+	.btn {
+	  margin:25px;
+	}
+
+
+
+	}
+</style>
+{% endblock %}
+
+{% block body %}
+
+<form action="">
+  <div class="scroll-box">
+  	<h1 class="tos-title">Terms of Service</h1>
+  	<br>
+    <p>Provident minima cum quia commodi. Exercitationem suscipit deserunt impedit quod omnis unde. Fuga nobis perspiciatis nisi harum. Assumenda natus laborum voluptatum itaque deleniti earum ad, necessitatibus distinctio qui quo? Facilis. Quos mollitia
+      esse nisi dolorem vero porro repudiandae hic impedit ea totam inventore, eum, ipsum illo, aliquid voluptatibus rem at autem unde optio! Quibusdam nesciunt magni et dolorum nemo natus?</p>
+    <p>Provident minima cum quia commodi. Exercitationem suscipit deserunt impedit quod omnis unde. Fuga nobis perspiciatis nisi harum. Assumenda natus laborum voluptatum itaque deleniti earum ad, necessitatibus distinctio qui quo? Facilis. Quos mollitia
+      esse nisi dolorem vero porro repudiandae hic impedit ea totam inventore, eum, ipsum illo, aliquid voluptatibus rem at autem unde optio! Quibusdam nesciunt magni et dolorum nemo natus?</p>
+    <p>Provident minima cum quia commodi. Exercitationem suscipit deserunt impedit quod omnis unde. Fuga nobis perspiciatis nisi harum. Assumenda natus laborum voluptatum itaque deleniti earum ad, necessitatibus distinctio qui quo? Facilis. Quos mollitia
+      esse nisi dolorem vero porro repudiandae hic impedit ea totam inventore, eum, ipsum illo, aliquid voluptatibus rem at autem unde optio! Quibusdam nesciunt magni et dolorum nemo natus?</p>
+    <p>Provident minima cum quia commodi. Exercitationem suscipit deserunt impedit quod omnis unde. Fuga nobis perspiciatis nisi harum. Assumenda natus laborum voluptatum itaque deleniti earum ad, necessitatibus distinctio qui quo? Facilis. Quos mollitia
+      esse nisi dolorem vero porro repudiandae hic impedit ea totam inventore, eum, ipsum illo, aliquid voluptatibus rem at autem unde optio! Quibusdam nesciunt magni et dolorum nemo natus?</p>
+  </div>
+</form>
+
+<br>
+
+<div align="center">
+<button id="save-button"
+  type="submit" class="btn btn-danger"
+  onclick="Proceed to Project Page">
+    Decline
+</button>
+
+
+<button id="save-button"
+  type="submit" class="btn btn-success"
+  onclick="Return to Login">
+    Accept
+</div>
+
+{% endblock %}
+

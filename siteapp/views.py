@@ -29,7 +29,7 @@ from .notifications_helpers import *
 def homepage(request):
     # If the user is logged in, then redirect them to the projects page.
     if request.user.is_authenticated:
-        return HttpResponseRedirect("/projects")
+        return HttpResponseRedirect("/signon_banner")
 
     from .views_landing import homepage
     return homepage(request)
@@ -1618,3 +1618,15 @@ def shared_static_pages(request, page):
         "password_hash_method": password_hash_method,
         "project_form": ProjectForm(request.user),
     })
+
+def signon_banner(request):
+    return render(request, "signon_banner.html")
+
+
+
+
+
+
+
+
+

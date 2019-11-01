@@ -21,6 +21,9 @@ urlpatterns = [
     # Django admin site
     url(r'^admin/', admin.site.urls),
 
+    # Sign On Banner
+    url(r'^signon_banner$',views.signon_banner),
+
     # apps
     url(r"^tasks/", include("guidedmodules.urls")),
     url(r"^discussion/", include("discussion.urls")),
