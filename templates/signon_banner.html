@@ -56,17 +56,17 @@ Sign On Banner
 <br>
 
 <div align="center">
-<button id="save-button"
+<a id="save-button"
   type="submit" class="btn btn-danger"
-  onclick="Proceed to Project Page">
+  href="/accounts/logout">
     Decline
-</button>
+</a>
 
-
-<button id="save-button"
+<a id="save-button"
   type="submit" class="btn btn-success"
-  onclick="Return to Login">
+  href="/projects">
     Accept
+</a>
 </div>
 
 {% endblock %}
