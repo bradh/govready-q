@@ -72,6 +72,7 @@ INSTALLED_APPS = [
 	'django.contrib.sites', # required by allauth
 	'django.contrib.messages',
 	'django.contrib.humanize',
+	'termsandconditions',
 
 	'bootstrap3',
 	'allauth',
@@ -98,6 +99,7 @@ MIDDLEWARE = [
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'termsandconditions.middleware.TermsAndConditionsRedirectMiddleware',
 ]
 if environment["debug"] and os.path.exists(os.path.join(os.path.dirname(__file__), 'helper_middleware.py')):
 	MIDDLEWARE_CLASSES.append(primary_app+'.helper_middleware.DumpErrorsToConsole')
@@ -219,6 +221,10 @@ CACHES = {
 		'LOCATION': '127.0.0.1:11211',
 	}
 }
+CACHE_MIDDLEWARE_SECONDS = 30
+CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
+CACHE_MIDDLEWARE_KEY_PREFIX = 'tc'
+
 if environment.get('memcached'):
 	# But if the 'memcached' environment setting is true,
 	# enable a memcached cache using the default host/port

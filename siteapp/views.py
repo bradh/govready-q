@@ -8,6 +8,11 @@ from django.forms import ModelForm
 from django.http import (Http404, HttpResponse, HttpResponseForbidden,
                          HttpResponseNotAllowed, HttpResponseRedirect,
                          JsonResponse)
+
+#termsandconditions
+from django.views.generic import TemplateView
+from termsandconditions.decorators import terms_required
+
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -33,6 +38,38 @@ def homepage(request):
 
     from .views_landing import homepage
     return homepage(request)
+
+#termsandconditions
+class IndexView(TemplateView):
+    """
+    Main site page page.
+
+    url: /
+    """
+
+    template_name = "index.html"
+
+
+class SecureView(TemplateView):
+    """
+    Secure testing page.
+
+    url: /secure & /securetoo
+    """
+
+    template_name = "secure.html"
+
+
+class TermsRequiredView(TemplateView):
+    """
+    Terms Required testing page.
+
+    url: /terms_required
+    """
+
+    template_name = "terms_required.html"
+
+
 
 def assign_project_lifecycle_stage(projects):
     # Define lifecycle stages.
@@ -294,6 +331,7 @@ def filter_app_catalog(catalog, request):
     return catalog, filter_description
 
 @login_required
+@terms_required
 def apps_catalog(request):
     # We use the querystring to remember which question the user is selecting
     # an app to answer, when starting an app from within a project.

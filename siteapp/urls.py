@@ -2,6 +2,13 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
 
+#added for terms and conditions
+from .views import TermsRequiredView, SecureView, IndexView
+from django.views.generic import RedirectView, TemplateView
+from django.views.decorators.cache import never_cache
+from termsandconditions.decorators import terms_required
+from django.contrib.auth.decorators import login_required
+
 admin.autodiscover()
 
 import siteapp.views as views
@@ -14,6 +21,12 @@ urlpatterns = [
 
     url(r'^api/v1/projects/(?P<project_id>\d+)/answers$', views_landing.project_api),
     url(r'^media/users/(\d+)/photo/(\w+)', views_landing.user_profile_photo),
+
+    # Terms Required
+    url(r'^termsrequired/$', never_cache(terms_required(login_required(TermsRequiredView.as_view()))), name="tc_demo_required_page"),
+
+    # Terms and Conditions
+    url(r'^terms/', include('termsandconditions.urls')),
 
     # incoming email hook for responses to notifications
     url(r'^notification_reply_email_hook$', views_landing.notification_reply_email_hook),
