@@ -1,6 +1,6 @@
 # Setting up a Database for Production Workloads
 
-The preferred production database for Q is PostgreSQL, but MySQL/MariaDB is also supported.
+The preferred production database for Q is PostgreSQL (9.4+), but MySQL/MariaDB is also supported.
 
 SQLite is supported in development environments, but not recommended for production use.
 
