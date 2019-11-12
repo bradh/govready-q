@@ -54,6 +54,9 @@ urlpatterns = [
     # itsystems
     url(r"^itsystems/", include("itsystems.urls")),
 
+    # controlapp
+    url(r"^controls/", include("controlapp.urls")),
+
     # org groups
     url(r'^groups$', views_landing.org_groups),
     url(r'^groups/new$', views_landing.new_org_group),

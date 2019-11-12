@@ -1,10 +1,19 @@
 GovReady-Q Release Notes
 ========================
 
+v09.0.3.1 (November 11, 2019)
+-----------------------------
+
+[WIP] Experimental release with Controlapp Django app to integrate with control and document service provider.
+
+Represent "ControlService"
+
+Also add in initial unit test code for IT System and Controlapp.
+
 v0.9.0.3 (October 25, 2019)
 ---------------------------
 
-[WIP] Experimental release with new It System Django app and integration with Wazuh.
+[WIP] Experimental release with new IT System Django app and integration with Wazuh.
 
 Represent "Systems", "Hosts", and "Agents" in GovReady to facilitate data exchanges with Wazuh and other scanning services.
 

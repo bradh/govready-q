@@ -15,6 +15,7 @@ INSTALLED_APPS += [
     'guidedmodules',
     'discussion',
     'itsystems',
+    'controlapp',
     'system_settings',
 
     'testmocking',
