@@ -1,6 +1,42 @@
 from django.test import TestCase
 from .models import System, Host, AgentService, Agent, Vendor, Component
 
+from siteapp.tests import SeleniumTest, OrganizationSiteFunctionalTests
+
+class WebTest(OrganizationSiteFunctionalTests):
+    def _output_source(self, name):
+        with open("local/{}.debug.html".format(name), 'w') as file:
+            file.write(self.browser.page_source)
+    def test_homepage(self):
+        self.browser.get(self.url("/"))
+        self.assertRegex(self.browser.title, "Welcome to Compliance Automation")
+
+    def test_itsystem_creation(self):
+        self._login()
+
+        # load the module entry point's URL
+        self.browser.get(self.url("/itsystems"))
+        # we assume no IT Systems have been created yet - verify this
+        self.assertEqual(0, System.objects.count())
+        self.assertInNodeText("You do not have access to any IT Systems.", "div.container p")
+
+        # create a new system: first, load that page
+        self.click_element('a#new-itsystem')
+
+        # and fill in some test data
+        self.fill_field("#id_name", "Test System")
+        self.fill_field("#id_sdlc_stage", "Deployed")
+        self.click_element("form button#create-itsystems-button[type=submit]")
+        # presumably, we've now created an IT System
+        self.assertEqual(1, System.objects.count())
+
+        # and now, we'll need to create some Hosts
+        self.assertInNodeText("Add a Host", "a#new-itsystem-host")
+        self.assertInNodeText("You do not have access to any Hosts for this IT System.", "div.container p")
+
+        self.click_element("a#new-itsystem-host")
+        # next steps: create the Host, see what else is needed
+
 class ModelTest(TestCase):
     @classmethod
     def setUpClass(self):
