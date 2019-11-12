@@ -6,7 +6,7 @@ class ModelTest(TestCase):
     def setUpClass(self):
         super().setUpClass()
         self.unique_counter = 0
-        
+
     def getString(self):
         return "some string"
 
@@ -20,6 +20,7 @@ class ModelTest(TestCase):
             name=self.getUniqueString(),
             sdlc_stage=self.getString(),
         )
+
     def makeHost(self):
         return Host.objects.create(
             name=self.getUniqueString(),
@@ -27,29 +28,33 @@ class ModelTest(TestCase):
             os=self.getString(),
             system=self.makeSystem(),
         )
+
     def makeAgentService(self):
         return AgentService.objects.create(
             name=self.getUniqueString(),
             api_user=self.getString(),
             api_pw=self.getString(),
         )
+
     def makeAgent(self):
         return Agent.objects.create(
             agent_id=self.getString(), # should this be unique? (need to check specs)
             agent_service=self.makeAgentService(),
             host=self.makeHost(),
         )
+
     def makeVendor(self):
         return Vendor.objects.create(
             name=self.getUniqueString(),
         )
+
     def makeComponent(self):
         return Component.objects.create(
             name=self.getUniqueString(),
             vendor=self.makeVendor(),
             version=self.getString(),
         )
-        
+
 
 class SystemModelTest(ModelTest):
     def testAbsoluteUrl(self):
@@ -96,3 +101,4 @@ class ComponentModelTest(ModelTest):
     def testModelStructure(self):
         obj = self.makeComponent()
         self.assertIsInstance(obj, Component)
+
