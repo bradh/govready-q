@@ -32,10 +32,21 @@ class WebTest(OrganizationSiteFunctionalTests):
 
         # and now, we'll need to create some Hosts
         self.assertInNodeText("Add a Host", "a#new-itsystem-host")
+        self.assertEqual(0, Host.objects.count())
         self.assertInNodeText("You do not have access to any Hosts for this IT System.", "div.container p")
 
         self.click_element("a#new-itsystem-host")
-        # next steps: create the Host, see what else is needed
+
+        self.fill_field('#id_name', 'Test Host')
+        self.fill_field('#id_host_type', 'Webserver')
+        self.fill_field('#id_os', 'Windows 10')
+        self.select_option_by_visible_text('#id_system', "Test System")
+        self.click_element("form button#create-hostsystems-button[type=submit]")
+
+        self.assertEqual(1, Host.objects.count())
+        self.assertNotInNodeText('Server Error', 'body')
+        # might be worth adding some more assertions here
+
 
 class ModelTest(TestCase):
     @classmethod
