@@ -77,6 +77,39 @@ class WebTest(OrganizationSiteFunctionalTests):
         self.assertNotInNodeText('Server Error', 'body')
 
 
+    def testComponentRequiresVendor(self):
+        self._login()
+
+        self.browser.get(self.url("/itsystems/components/new"))
+
+        component_count = Component.objects.count()
+
+        # create a Component, with no linked Vendor. This is expected to fail.
+        self.fill_field('#id_name', 'Test Component')
+        self.fill_field('#id_version', '1.0.0')
+        self.click_element("form button#create-component-button[type=submit]")
+
+        # count of Components should be the same - nothing should have been created
+        self.assertEqual(component_count, Component.objects.count())
+
+        # the HTML response can be anything, as long as the count didn't change
+
+        self._output_source('it-fail-component')
+    
+    # this is a somewhat weak test - would be better to test Host and AgentService separately
+    def testAgentRequiresHostPlusAgentService(self):
+        self._login()
+        
+        self.browser.get(self.url("/itsystems/agents/new"))
+
+        agent_count = Agent.objects.count()
+
+        self.fill_field('#id_agent_id', 'Test Agent')
+        self.click_element("form button#create-hostsystems-button[type=submit]")
+
+        self.assertEqual(agent_count, Agent.objects.count())
+
+        self._output_source('it-fail-agent')
 
 
 class ModelTest(TestCase):
