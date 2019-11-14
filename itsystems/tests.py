@@ -11,7 +11,7 @@ class WebTest(OrganizationSiteFunctionalTests):
         self.browser.get(self.url("/"))
         self.assertRegex(self.browser.title, "Welcome to Compliance Automation")
 
-    def test_itsystem_creation(self):
+    def testSystemAndHostCreation(self):
         self._login()
 
         # load the module entry point's URL
@@ -46,6 +46,37 @@ class WebTest(OrganizationSiteFunctionalTests):
         self.assertEqual(1, Host.objects.count())
         self.assertNotInNodeText('Server Error', 'body')
         # might be worth adding some more assertions here
+
+
+    def testVendorAndComponentCreation(self):
+        self._login()
+
+        self.assertEqual(0, Component.objects.count())
+        self.assertEqual(0, Vendor.objects.count())
+
+        # navigate to the Components list page
+        # do this starting from the main itsystems page, to verify that it's actually UI-accessible
+        self.browser.get(self.url("/itsystems"))
+        # do *= for contains, so that we can make it absolute or add a trailing slash without breaking the test
+        self.click_element('a[href*="components/list"]') 
+        
+        self.click_element('a#new-vendor')
+
+        self.fill_field('#id_name', 'Test Vendor')
+        self.click_element("form button#create-itsystems-button[type=submit]")
+        self.assertEqual(1, Vendor.objects.count())
+        self.assertNotInNodeText('Server Error', 'body')
+        
+        self.click_element('a#new-component')
+        self.fill_field('#id_name', 'Test Component')
+        self.fill_field('#id_version', '1.0.0')
+        self.select_option_by_visible_text('#id_vendor', "Test Vendor")
+        self.click_element("form button#create-component-button[type=submit]")
+        self.assertEqual(1, Component.objects.count())
+        self.assertEqual("Test Vendor", Component.objects.get().vendor.name)
+        self.assertNotInNodeText('Server Error', 'body')
+
+
 
 
 class ModelTest(TestCase):
