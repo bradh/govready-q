@@ -25,7 +25,7 @@ class Host(models.Model):
     name = models.CharField(max_length=255, unique=True, help_text="The name of this Host Instance (e.g., workload/endpoint/server).")
     host_type = models.CharField(max_length=24, null=True, blank=True, help_text="A categorization of the host.")
     os = models.CharField(max_length=155, null=True, blank=True, help_text="The Operating System running on the Host Instance.")
-    system = models.ForeignKey(System, blank=True, null=True, related_name="hosts", on_delete=models.SET_NULL, help_text="The System to which this Host belongs.")
+    system = models.ForeignKey(System, blank=False, null=False, related_name="hosts", on_delete="CASCADE", help_text="The System to which this Host belongs.")
     created = models.DateTimeField(auto_now_add=True, db_index=True)
     updated = models.DateTimeField(auto_now=True, db_index=True)
 
