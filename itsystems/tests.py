@@ -45,8 +45,31 @@ class WebTest(OrganizationSiteFunctionalTests):
 
         self.assertEqual(1, Host.objects.count())
         self.assertNotInNodeText('Server Error', 'body')
-        # might be worth adding some more assertions here
 
+        host = Host.objects.get()
+
+        # make sure we can view data for the Host (probably nothing useful w/o an Agent, but should still be viewable)
+        self.click_element('[id="host_Test Host"]')
+        self.assertNotInNodeText('Server Error', 'body')
+        self.assertInNodeText("{} / {}".format(host.system.name, host.name), 'h2')
+    
+    def testHostRequiresSystem(self):
+        self._login()
+
+        self.browser.get(self.url("/itsystems/hosts/new"))
+
+        host_count = Host.objects.count()
+
+        # create a Host, with no linked System. This is expected to fail.
+        self.fill_field('#id_name', 'Test Host')
+        self.fill_field('#id_host_type', 'Webserver')
+        self.fill_field('#id_os', 'Windows 10')
+        self.click_element("form button#create-hostsystems-button[type=submit]")
+
+        # count of Hosts should be the same - nothing should have been created
+        self.assertEqual(host_count, Host.objects.count())
+
+        # the HTML response can be anything, as long as the count didn't change
 
     def testVendorAndComponentCreation(self):
         self._login()
@@ -94,7 +117,6 @@ class WebTest(OrganizationSiteFunctionalTests):
 
         # the HTML response can be anything, as long as the count didn't change
 
-        self._output_source('it-fail-component')
     
     # this is a somewhat weak test - would be better to test Host and AgentService separately
     def testAgentRequiresHostPlusAgentService(self):
@@ -109,7 +131,6 @@ class WebTest(OrganizationSiteFunctionalTests):
 
         self.assertEqual(agent_count, Agent.objects.count())
 
-        self._output_source('it-fail-agent')
 
 
 class ModelTest(TestCase):
