@@ -124,7 +124,15 @@ def host(request, pk):
         # print(agent_service_data_pkgs)
 
     else:
+        agent_service_data = None
+        agent_service_data_pkgs = None
+        checks_total = 0
+        checks_pass = 0
+        checks_fail = 0
+        checks_pass_percent = None
+        checks_fail_percent = None
         agent_service_data_pretty = "Agent Service not defined or not supported."
+        agent_service_data_pkgs_pretty = None
 
     return render(request, "itsystems/host.html", {
         "host": host,
