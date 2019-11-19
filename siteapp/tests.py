@@ -508,6 +508,8 @@ class GeneralTests(OrganizationSiteFunctionalTests):
         self.fill_field("#id_password", self.user3.clear_password)
         self.click_element("form button.primaryAction")
         var_sleep(1)
+        var_sleep(30) #### TO VIEW PYTHON 'KeyError' EXCEPTION FROM guidedmodules/views.py
+        #### WITHOUT DEBUGGING, SERVER ERROR 500 MAKES BROWSER.TITLE='', WHICH FAILS THE NEXT STATEMENT
         self.assertRegex(self.browser.title, "Next Question: The Question") # user is on the task page
 
         # reset_login()
