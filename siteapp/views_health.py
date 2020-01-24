@@ -13,6 +13,7 @@ def index(request):
         '<li><a href="/health/list-vendor-resources">list-vendor-resources</a> - List fetched vendor resources.</li>'
         '<li><a href="/health/load-base">load-base</a> - Load base page template with toggleable libraries. Use "all" or "none" link at bottom of page, or edit URL to change which libraries are loaded.</li>'
         '<li><a href="/health/request-headers">request-headers</a> - View HTTP headers present in request sent by web browser.</li>'
+        '<li><a href="/health/simple-crsf">request-headers</a> - Simple form to test CRSF.</li>'
         '</body></html>' )
     return HttpResponse(html)
 
@@ -50,3 +51,21 @@ def request(request):
     else:
         html = "<html><body><p>Please set DEBUG and try again.</p></body></html>"
     return HttpResponse(html)
+
+def simple_crsf(request):
+    if settings.DEBUG:
+        from pprint import pformat
+        output = pformat(request.POST)
+        html = (
+            '<html><body>'
+            '<form action="/health/simple-crsf" method="post">'
+            'simple_crsf: <input type="text" name="simple_crsf"><br />'
+            '<button type="submit">Submit</button>'
+            '</form>'
+            '<pre>{}</pre>'
+            '</body></html>' ).format(output)
+    else:
+        html = "<html><body><p>Please set DEBUG and try again.</p></body></html>"
+    return HttpResponse(html)
+
+    
