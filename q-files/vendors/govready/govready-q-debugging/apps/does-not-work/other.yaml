@@ -1,0 +1,9 @@
+id: other
+title: other
+
+questions:
+- id: q1
+  title: First Question
+  prompt: |
+    This is the first question.
+  type: interstitial

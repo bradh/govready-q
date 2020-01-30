@@ -1,0 +1,10 @@
+id: hide_show_other
+title: Hide/Show Other
+questions:
+- id: the_big_question
+  title: The Big Question
+  prompt: >-
+    IMPORTANT: This is the big question. Shall we hide/show other questions?
+
+    Answer "Yes" or  "No".
+  type: yesno

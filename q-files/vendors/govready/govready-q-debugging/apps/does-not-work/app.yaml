@@ -1,0 +1,26 @@
+id: app
+title: Debugging Project Data Export
+type: project
+version: 0.0.0.1
+
+catalog:
+  category: Debugging
+  description:
+    long: |
+      Long Description
+    short: Short Description
+  version: 0.0.0.1
+questions:
+- id: hide_show_other
+  title: Hide/Show Other
+  type: module
+  module-id: hide_show_other
+
+  # Other Questions
+- id: other
+  title: Other
+  type: module
+  module-id: other
+  impute:
+  - condition: project.hide_show_other.the_big_question != 'yes'
+    value: ~
