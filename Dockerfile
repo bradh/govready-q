@@ -6,8 +6,8 @@
 # Run examples:
 #   docker run -it -d -p 8000:8000 --name govready-q-0.9.0 --rm govready/govready-q-0.9.0
 
-# Build on Docker's official CentOS 7 image.
-FROM centos:7
+# Build on Docker's official CentOS 8 image.
+FROM centos:8
 
 # Expose the port that `manage.py runserver` uses by default.
 EXPOSE 8000
@@ -21,18 +21,20 @@ ENV LC_ALL en_US.UTF-8
 ENV LANGUAGE en_US:en
 
 # Install required system packages.
-# git2u: git 2 or later is required for our use of GIT_SSH_COMMAND in AppSourceConnection
+# git: git 2 or later is required for our use of GIT_SSH_COMMAND in AppSourceConnection
 # jq: we use it to assemble the local/environment.json file
 RUN \
-   yum -y install https://centos7.iuscommunity.org/ius-release.rpm \
-&& yum -y update \
-&& yum -y install \
-	python36u python36u-devel.x86_64 python36u-pip gcc-c++.x86_64 \
-	unzip git2u jq nmap-ncat \
-	graphviz pandoc xorg-x11-server-Xvfb wkhtmltopdf \
-	supervisor \
+   dnf -y update \
+&& dnf -y install \
+	python3 python3-devel gcc-c++.x86_64 \
+	unzip git jq nmap-ncat \
+# TODO: add these back in (used for building docs)
+#	graphviz pandoc xorg-x11-server-Xvfb wkhtmltopdf \
 	mysql-devel \
-	&& yum clean all && rm -rf /var/cache/yum
+	&& dnf clean all && rm -rf /var/cache/dnf
+
+# Install required system packages that come via pip rather than dnf.
+RUN pip3.6 install supervisor
 
 # Copy in the Python module requirements and install them.
 # Manually install database drivers which aren't in our requirements
@@ -87,6 +89,7 @@ RUN python3.6 manage.py collectstatic --noinput
 #    the non-root user could not create files inside them.
 RUN rm -rf /run/* /var/log/*
 RUN chmod a+rwx /run /var/log
+RUN echo_supervisord_conf > /etc/supervisord.conf
 RUN sed -i "s:/var/run/supervisor/:/var/run/:" /etc/supervisord.conf
 RUN sed -i "s:/var/log/supervisor/:/var/log/:" /etc/supervisord.conf
 RUN sed -i "s:^;childlogdir=/tmp:childlogdir=/var/log:" /etc/supervisord.conf
