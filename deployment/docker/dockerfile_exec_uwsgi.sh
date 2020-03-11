@@ -8,6 +8,9 @@ set -euf -o pipefail # abort script on error
 echo "This is GovReady-Q."
 cat VERSION
 
+# Dump environment variables if DEBUG is set
+case $DEBUG in ([Tt][Rr][Uu][Ee]) echo "Environment Variables >>>>>>>>" && printenv|sort && echo "<<<<<<<<" ;; esac
+
 # Show filesystem information because the root filesystem might be
 # read-only and other paths might be mounted with tmpfs and that's
 # helpful to know for debugging.
